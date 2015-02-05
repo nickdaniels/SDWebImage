@@ -55,6 +55,10 @@ static char imageURLKey;
                 if (image) {
                     wself.image = image;
                     [wself setNeedsLayout];
+
+                    if (cacheType == SDImageCacheTypeNone) {
+                        [self _fadeLayer:wself.layer];
+                    }
                 } else {
                     if ((options & SDWebImageDelayPlaceholder)) {
                         wself.image = placeholder;
@@ -125,6 +129,13 @@ static char imageURLKey;
 
 - (void)sd_cancelCurrentAnimationImagesLoad {
     [self sd_cancelImageLoadOperationWithKey:@"UIImageViewAnimationImages"];
+}
+
+- (void)_fadeLayer:(CALayer *)layer {    CATransition *transition = [CATransition animation];
+    transition.duration = .5;
+    transition.timingFunction = [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+    transition.type = kCATransitionFade;
+    [layer addAnimation:transition forKey:@"fade"];
 }
 
 @end
